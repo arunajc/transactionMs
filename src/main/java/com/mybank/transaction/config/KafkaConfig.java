@@ -15,6 +15,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -81,16 +82,17 @@ public class KafkaConfig {
 	}
 
 	@Bean
-	public ConsumerFactory<Long, TransactionDetails> consumerFactory() {
+	public ConsumerFactory<Long, Map<String, Object>> consumerFactory() {
+		Map<String, String> configProps = consumerConfigProps.getProps();
+		configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "com.mybank.account.model");
 		return new TracingConsumerFactory<>(
-				new DefaultKafkaConsumerFactory<>(
-						(Map)consumerConfigProps.getProps()), tracer());
+				new DefaultKafkaConsumerFactory<>((Map) configProps), tracer());
 	}
 
 	@Bean
-	public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<Long, TransactionDetails>>
+	public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<Long, Map<String, Object>>>
 	kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<Long, TransactionDetails> factory =
+		ConcurrentKafkaListenerContainerFactory<Long, Map<String, Object>> factory =
 				new ConcurrentKafkaListenerContainerFactory<>();
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
