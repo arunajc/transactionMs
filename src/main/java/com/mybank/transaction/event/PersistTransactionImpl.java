@@ -19,7 +19,7 @@ public class PersistTransactionImpl implements PersistTransaction{
     private static final Logger LOGGER = LoggerFactory.getLogger(PersistTransactionImpl.class);
 
     @Autowired
-    TransactionRepository transactionRepository;
+    protected TransactionRepository transactionRepository;
 
     @Value("${mybank.kafka.transaction.error.topic}")
     protected String transactionKafkaErrorTopic;

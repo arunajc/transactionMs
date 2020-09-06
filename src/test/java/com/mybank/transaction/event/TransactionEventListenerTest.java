@@ -1,4 +1,4 @@
-package com.mybank.customer.event;
+package com.mybank.transaction.event;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -97,7 +97,6 @@ public class TransactionEventListenerTest {
 
         transactionEventListener.listener(createEvent());
 
-        //TODO: retry not working - need to check
         //verify(kafkaTemplate, times(1)).send(any(Message.class)); //published to error topic
         //verify(transactionRepository, times(3)).save(any(TransactionDetailsEntity.class));
 
